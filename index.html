@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Web CLI</title>
+</head>
+<body>
+  <h1>Web CLI</h1>
+  <form id="cliForm">
+    <label for="command">Command:</label>
+    <input type="text" id="command" name="command" required>
+    <button type="submit">Execute</button>
+  </form>
+  <div id="output">
+    <h2>Output:</h2>
+    <pre id="outputText"></pre>
+  </div>
+  <script>
+    const cliForm = document.getElementById('cliForm');
+    const outputText = document.getElementById('outputText');
+
+    cliForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const command = document.getElementById('command').value;
+
+      // Send the command to the serverless function
+      const response = await fetch('/api/hello', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ command }),
+      });
+
+      const data = await response.json();
+
+      // Display the output
+      outputText.textContent = data.message || data.error || 'An error occurred.';
+    });
+  </script>
+</body>
+</html>
